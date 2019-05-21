@@ -40,7 +40,9 @@ async def web_serv_run():
                 continue
         print ("Już nie śpię")
         motor_sleep_time = motor_sleep_time + 0.01
-        print("Mamy połączenie od: {}", str(addr))
+        #print("Mamy połączenie od: {}", str(addr))
+        # Rób tak ładniej
+        print(f"Mamy połączenie od: {addr}")
         conn.send(b"HTTP/1.1 200 OK\n")
         conn.send(b"Content-Type: text/html\n")
         conn.send(b"Connection: close\n\n")

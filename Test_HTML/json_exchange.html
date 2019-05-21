@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>Strona HTML5</title>
+
+    <script>
+        function funkcja()
+        {
+            console.log("Ło! Ktoś mnie kliknął!");
+            let nazwa = new XMLHttpRequest();
+            nazwa.open("POST", "tu_slij", true);
+            nazwa.send(JSON.stringify({test: "ala ma koteła"}))
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1>Nagłówek :-)</h1>
+    <button is="przycisk" onclick="funkcja()">Ala ma kota</button>
+</body>
+</html>

@@ -2,7 +2,10 @@
 print("Python WWW Server")
 
 import socket
-mes = b"Ala ma kota!"
+#mes = b"Ala ma kota!"
+fd = open("../Test_HTML/json_exchange.html", "r")
+mes = bytes(fd.read(), "UTF-8")
+fd.close()
 
 def web_serv():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,10 +21,17 @@ def web_serv():
                 continue
         print ("Już nie śpię")
         print("Mamy połączenie od: {}", str(addr))
-        data = str(conn.recv(2048))
+        data = conn.recv(2048)
         print(data)
-        poz = data.find("ala")
+        #poz = data.find("ala")
+        poz = data.find(b"{\"")
         print(poz)
+        print("Data type: ", type(data))
+        sub_string = data[poz:]
+        print("Sub type: ", type(sub_string))
+        print(sub_string)
+        print(sub_string.hex())
+        print("O rany")
         conn.send(b"HTTP/1.1 200 OK\n")
         conn.send(b"Content-Type: text/html\n")
         conn.send(b"Connection: close\n\n")
