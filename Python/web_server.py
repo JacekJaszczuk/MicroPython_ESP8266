@@ -6,18 +6,31 @@ mes = b"Ala ma kota!"
 
 def web_serv():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("", 80))
+    s.bind(("", 8080))
     s.listen(5)
+    s.settimeout(0.5)
 
     while True:
-        conn, addr = s.accept()
+        try:
+                conn, addr = s.accept()
+        except Exception as e:
+                print(e)
+                continue
+        print ("Już nie śpię")
         print("Mamy połączenie od: {}", str(addr))
+        data = str(conn.recv(2048))
+        print(data)
+        poz = data.find("ala")
+        print(poz)
         conn.send(b"HTTP/1.1 200 OK\n")
         conn.send(b"Content-Type: text/html\n")
         conn.send(b"Connection: close\n\n")
         conn.sendall(mes)
         conn.close()
 
+web_serv()
+
+'''
 import time
 from machine import Pin
 
@@ -40,3 +53,4 @@ def silnik():
         d3.off()
         d4.on()
         time.sleep_ms(10)
+'''
