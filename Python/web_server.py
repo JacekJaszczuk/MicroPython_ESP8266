@@ -12,12 +12,14 @@ def web_serv():
     s.bind(("", 8080))
     s.listen(5)
     s.settimeout(0.5)
+    count = 0
 
     while True:
         try:
                 conn, addr = s.accept()
         except Exception as e:
-                print(e)
+                print(e, count*".")
+                count = (count + 1) % 10
                 continue
         print ("Już nie śpię")
         print("Mamy połączenie od: {}", str(addr))

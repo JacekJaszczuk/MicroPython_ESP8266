@@ -12,6 +12,15 @@
             nazwa.open("POST", "tu_slij", true);
             nazwa.send(JSON.stringify({test: "ala ma koteła"}))
         }
+        function fun2()
+        {
+            console.log("Ło! Ktoś mnię przesunął!");
+            let asd = document.getElementById("slider");
+            alert(asd.value);
+            let nazwa = new XMLHttpRequest();
+            nazwa.open("POST", "tam_slij", true);
+            nazwa.send(JSON.stringify({value: asd.value}));
+        }
     </script>
 
 </head>
@@ -19,5 +28,6 @@
 <body>
     <h1>Nagłówek :-)</h1>
     <button is="przycisk" onclick="funkcja()">Ala ma kota</button>
+    <input type="range" onchange="fun2()" id="slider">
 </body>
 </html>
