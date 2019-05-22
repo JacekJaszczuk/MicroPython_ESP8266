@@ -71,27 +71,9 @@ function motorVelocity(){
   nazwa.open("POST", "tam_slij", true);
   nazwa.send(JSON.stringify({value: asd.value}));
 }
-
-var slider = document.getElementById('test-slider');
-  noUiSlider.create(slider, {
-   start: [20, 80],
-   connect: true,
-   step: 1,
-   orientation: 'horizontal', // 'horizontal' or 'vertical'
-   range: {
-     'min': 0,
-     'max': 100
-   },
-   format: wNumb({
-     decimals: 0
-   })
-  });
-
 </script>
 
-
-
-
+<!-- HTML -->
 <meta charset="utf-8" />
 <title>Panel kontrolny: silnik krokowy</title>
 </head>
