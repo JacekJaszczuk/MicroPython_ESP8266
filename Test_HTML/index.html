@@ -40,12 +40,16 @@ function motorDir(direction) {
 
 function motorVelocity(){
   //Funkcja sterująca prędkością silnika
-  var velocity  = document.getElementById("mySlider").value;
-  document.getElementById("valueSlider").innerHTML = "Wartość: " + velocity;
-  console.log("Prędkość: " + velocity);
+  var inputVal  = document.getElementById("valSliderIn")
+  var outputVal = document.getElementById("valSliderOut")
+  outputVal.innerHTML = inputVal.value
+  inputVal.addEventListener('input', function () {
+    outputVal.innerHTML = inputVal.value;
+  }, false);
+  console.log("Prędkość: " + inputVal.value);
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tam_slij", true);
-  nazwa.send(JSON.stringify({predkosc: velocity}));
+  nazwa.send(JSON.stringify({predkosc: inputVal.value}));
 }
 
 function motorSendPresetFile(){
@@ -114,8 +118,8 @@ function motorSendPreset(){
   <!-- SEKCJA PRĘDKOŚĆ -->
 	<h2>Prędkość</h2>
 	<div class="slidecontainer">
-		<p id="valueSlider">Wartość: 50</p>
-  		<input style="width: 100%;height: 25px;" type="range" min="1" max="100" value="50" class="slider" id="mySlider" onchange="motorVelocity()">
+    <output id="valSliderOut">50</output>
+  		<input style="width: 100%;height: 25px;" type="range" min="1" max="100" value="50" class="slider" id="valSliderIn" onmouseup="motorVelocity()">
 	</div>
   <br>
   <!-- SEKCJA NASTAWY -->
