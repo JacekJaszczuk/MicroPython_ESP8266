@@ -64,10 +64,10 @@ function motorPwr(power) {
   var checkBox = document.getElementById("motorPwrCheck"); // Get the checkbox
   if (checkBox.checked == true){
     console.log("Motor ON");
-    nazwa.send(JSON.stringify({power: "motorOn"}))    
+    nazwa.send(JSON.stringify({power: true}))    
   } else {
-     console.log("Motor Off");
-    nazwa.send(JSON.stringify({power: "motorOff"}))   
+     console.log("Motor OFF");
+    nazwa.send(JSON.stringify({power: false}))   
   }
 }
 
@@ -79,17 +79,17 @@ function motorDir(direction) {
     nazwa.send(JSON.stringify({kierunek: direction}))
   } else if (direction === "right") {
     console.log("P");
-    nazwa.send(JSON.stringify(kierunek: direction))
+    nazwa.send(JSON.stringify({kierunek: direction}))
   }
 }
 
 function motorVelocity(){
-  var x  = document.getElementById("mySlider").value;
-  document.getElementById("valueSlider").innerHTML = "Wartość: " + x;
-  console.log("Prędkość: " + x);
+  var velocity  = document.getElementById("mySlider").value;
+  document.getElementById("valueSlider").innerHTML = "Wartość: " + velocity;
+  console.log("Prędkość: " + velocity);
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tam_slij", true);
-  nazwa.send(JSON.stringify({value: x}));
+  nazwa.send(JSON.stringify({predkosc: velocity}));
 }
 
 function motorSendPreset(){
