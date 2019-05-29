@@ -64,10 +64,10 @@ function motorPwr(power) {
   var checkBox = document.getElementById("motorPwrCheck"); // Get the checkbox
   if (checkBox.checked == true){
     console.log("Motor ON");
-    nazwa.send(JSON.stringify({test: "motorOn"}))    
+    nazwa.send(JSON.stringify({power: "motorOn"}))    
   } else {
      console.log("Motor Off");
-    nazwa.send(JSON.stringify({test: "motorOff"}))   
+    nazwa.send(JSON.stringify({power: "motorOff"}))   
   }
 }
 
@@ -75,11 +75,11 @@ function motorDir(direction) {
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
   if (direction === "left"){
-    console.log("left");
-    nazwa.send(JSON.stringify({test: "ala ma koteła LEFT"}))
+    console.log("L");
+    nazwa.send(JSON.stringify({kierunek: direction}))
   } else if (direction === "right") {
-    console.log("right");
-    nazwa.send(JSON.stringify({test: "ala ma koteła RIGHT"}))
+    console.log("P");
+    nazwa.send(JSON.stringify(kierunek: direction))
   }
 }
 
