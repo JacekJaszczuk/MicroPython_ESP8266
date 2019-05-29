@@ -7,8 +7,7 @@
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <!-- JQuery Lib -->
-<script
-  src="https://code.jquery.com/jquery-3.4.1.js"
+<script src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <!-- Styl Materialize -->
@@ -95,18 +94,33 @@ function motorVelocity(){
 function motorSendPreset(){
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
-  //var data  = document.getElementById("textarea2").value
+
+  var lines = $('textarea').val().split('\n');
+    for(var i = 0;i < lines.length;i++){
+      console.log("Linia numer " + i +": " + lines[i])
+      var str = lines[i]
+      var direction = str.substring(str.lastIndexOf("(") + 1, str.indexOf(","));
+      var step = str.substring(str.lastIndexOf(","), str.indexOf(",")+1);
+      var velocity = str.substring(str.lastIndexOf(",")+1, str.lastIndexOf(")"));
+      console.log("kierunek: " + direction + ", kroki: " + step + ", predkosc: " + velocity);
+    }
   
-  //var arrayOfLines = $('#textarea2').val().split(/,|\n/);
-  //console.log(arrayOfLines);
-
-  var direction = document.getElementById("textarea1").value
-  var step = document.getElementById("textarea2").value
-  var velocity = document.getElementById("textarea3").value
-
-  console.log("kierunek: " + direction + ", kroki: " + step + ", predkosc: " + velocity);
-
   nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity}))
+}
+
+function motorSendPresetFile(){
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tu_slij", true);
+
+  var input = document.getElementById("openFile");
+  var reader = new FileReader();
+  reader.onload = function(){
+    var text = reader.result;
+    console.log(reader.result);
+  };
+  reader.readAsText(input.files[0]);
+
+  nazwa.send(JSON.stringify({jsonDataFromFile: text}))
 }
 </script>
 
@@ -140,33 +154,25 @@ function motorSendPreset(){
   <br>
   <h2>Preset</h2>
   <h3 align="left">Wgraj plik:<h3>
-  <form action="#">
     <div class="file-field input-field">
       <div class="btn">
         <span>plik *.ajag</span>
-        <input type="file">
+        <input type="file" id="openFile">
       </div>
       <div class="file-path-wrapper">
         <input class="file-path validate" type="text">
+        <button style="width: 100%;" class="btn waves-effect waves-light" onclick="motorSendPresetFile()">Upload</button>
       </div>
     </div>
-  </form>
   <h3 align="left">Wprowadź nastawy manualnie:<h3>
     <div class="row">
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
-            <textarea id="textarea1" class="materialize-textarea" data-length="120"></textarea>
-            <label for="textarea1">Kierunek (L/P):</label>
+            <textarea id="textarea" class="materialize-textarea" data-length="120"></textarea>
+            <label for="textarea">Składnia: silnik(kierunek, kroki, prędkość)</label>
           </div>
-          <div class="input-field col s12">
-            <textarea id="textarea2" class="materialize-textarea" data-length="120"></textarea>
-            <label for="textarea2">Liczba kroków:</label>
-          </div>
-          <div class="input-field col s12">
-            <textarea id="textarea3" class="materialize-textarea" data-length="120"></textarea>
-            <label for="textarea3">Prędkość (0-100):</label>
-          </div>
+
         </div>
       </form>
       <button class="btn waves-effect waves-light" type="submit" name="action" onclick="motorSendPreset()">Submit</button>
