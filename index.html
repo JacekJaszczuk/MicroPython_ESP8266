@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Styl Materialize -->
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- JQuery Lib -->
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<!-- Styl Materialize -->
+
+
+<!-- Style -->
+<style>
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+</style>
+
+<!-- Scripts -->
+<script>
+function motorPwr(power) {
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tu_slij", true);
+  var checkBox = document.getElementById("motorPwrCheck"); // Get the checkbox
+  if (checkBox.checked == true){
+    console.log("Motor ON");
+    nazwa.send(JSON.stringify({power: true}))    
+  } else {
+     console.log("Motor OFF");
+    nazwa.send(JSON.stringify({power: false}))   
+  }
+}
+
+function motorDir(direction) {
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tu_slij", true);
+  if (direction === "L"){
+    console.log("L");
+    nazwa.send(JSON.stringify({kierunek: direction}))
+  } else if (direction === "R") {
+    console.log("P");
+    nazwa.send(JSON.stringify({kierunek: direction}))
+  }
+}
+
+function motorVelocity(){
+  var velocity  = document.getElementById("mySlider").value;
+  document.getElementById("valueSlider").innerHTML = "Wartość: " + velocity;
+  console.log("Prędkość: " + velocity);
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tam_slij", true);
+  nazwa.send(JSON.stringify({predkosc: velocity}));
+}
+
+function motorSendPreset(){
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tu_slij", true);
+  //var data  = document.getElementById("textarea2").value
+  
+  //var arrayOfLines = $('#textarea2').val().split(/,|\n/);
+  //console.log(arrayOfLines);
+
+  var direction = document.getElementById("textarea1").value
+  var step = document.getElementById("textarea2").value
+  var velocity = document.getElementById("textarea3").value
+
+  console.log("kierunek: " + direction + ", kroki: " + step + ", predkosc: " + velocity);
+
+  nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity}))
+}
+</script>
+
+<!-- HTML -->
+<meta charset="utf-8" />
+<title>Panel kontrolny: silnik krokowy</title>
+</head>
+<body>
+<div class="container center-align">
+	<h1>Panel kontrolny</h1>
+	<br>
+	<h2>Zasilanie</h2>
+	<div class="switch">
+    <label>
+      Wyłącz
+      <input type="checkbox" id="motorPwrCheck" onclick="motorPwr()">
+      <span class="lever"></span>
+      Włącz
+    </label>
+  	</div>
+	<br>
+	<h2>Kierunek</h2>
+  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('L')">Lewo</button>
+  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('R')">Prawo</button>
+	<br>
+	<h2>Prędkość</h2>
+	<div class="slidecontainer">
+		<p id="valueSlider">Wartość: 50</p>
+  		<input type="range" min="1" max="100" value="50" class="slider" id="mySlider" onchange="motorVelocity()">
+	</div>
+  <br>
+  <h2>Preset</h2>
+  <h3 align="left">Wgraj plik:<h3>
+  <form action="#">
+    <div class="file-field input-field">
+      <div class="btn">
+        <span>plik *.ajag</span>
+        <input type="file">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text">
+      </div>
+    </div>
+  </form>
+  <h3 align="left">Wprowadź nastawy manualnie:<h3>
+    <div class="row">
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea id="textarea1" class="materialize-textarea" data-length="120"></textarea>
+            <label for="textarea1">Kierunek (L/P):</label>
+          </div>
+          <div class="input-field col s12">
+            <textarea id="textarea2" class="materialize-textarea" data-length="120"></textarea>
+            <label for="textarea2">Liczba kroków:</label>
+          </div>
+          <div class="input-field col s12">
+            <textarea id="textarea3" class="materialize-textarea" data-length="120"></textarea>
+            <label for="textarea3">Prędkość (0-100):</label>
+          </div>
+        </div>
+      </form>
+      <button class="btn waves-effect waves-light" type="submit" name="action" onclick="motorSendPreset()">Submit</button>
+    </div>
+</div>
+</body>
+</html>
