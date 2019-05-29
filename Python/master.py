@@ -53,6 +53,10 @@ async def motor_run():
                 d1.off()
                 d4.on()
                 await asyncio.sleep(motor_sleep_time)
+            else:
+                await asyncio.sleep(0)
+        else:
+            await asyncio.sleep(0)
 
 async def web_serv_run():
     # Definiuj zmienne globalne:
@@ -87,6 +91,7 @@ async def web_serv_run():
 
         # Odbierz odpowiedź z serwera:
         data = conn.recv(2048)
+        print(data)
         poz = data.find(b"{\"")
         # Szukaj JSONa:
         if poz == -1:
@@ -97,10 +102,22 @@ async def web_serv_run():
                 print("Twój JSON:", json_str)
                 dic = json.loads(json_str)
                 # Ustaw nastawy silnika:
-                motor_direction = dic["kierunek"]
-                print("Twój kierunek:", motor_direction)
-                motor_sleep_time = motor_sleep_time_base * dic["predkosc"]
-                print("Twoja prędkość:", motor_sleep_time)
+                try:
+                    motor_direction = dic["kierunek"]
+                    print("Twój kierunek:", motor_direction)
+                except:
+                    pass
+                try:
+                    motor_sleep_time = motor_sleep_time_base * (100.0 - float(dic["predkosc"]))
+                    print("Twoja prędkość:", motor_sleep_time)
+                except:
+                    pass
+                
+                try:
+                    motor_on = dic["power"]
+                    print("Silnik włączony:", motor_on)
+                except:
+                    pass
 
         # Wyślij nagłówki HTML oraz stronę HTML do przeglądarki internetowej:
         conn.send(b"HTTP/1.1 200 OK\n")
