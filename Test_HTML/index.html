@@ -12,7 +12,6 @@
   crossorigin="anonymous"></script>
 <!-- Styl Materialize -->
 
-
 <!-- Style -->
 <style>
 .slidecontainer {
@@ -94,7 +93,7 @@ function motorVelocity(){
 function motorSendPreset(){
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
-
+  
   var lines = $('textarea').val().split('\n');
     for(var i = 0;i < lines.length;i++){
       console.log("Linia numer " + i +": " + lines[i])
@@ -116,11 +115,10 @@ function motorSendPresetFile(){
   var reader = new FileReader();
   reader.onload = function(){
     var text = reader.result;
-    console.log(reader.result);
+    console.log(text);
+    nazwa.send(JSON.stringify({jsonDataFromFile: text}))
   };
-  reader.readAsText(input.files[0]);
-
-  nazwa.send(JSON.stringify({jsonDataFromFile: text}))
+  reader.readAsText(input.files[0]); 
 }
 </script>
 
