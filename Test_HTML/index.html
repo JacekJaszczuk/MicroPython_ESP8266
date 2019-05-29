@@ -74,10 +74,10 @@ function motorPwr(power) {
 function motorDir(direction) {
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
-  if (direction === "left"){
+  if (direction === "L"){
     console.log("L");
     nazwa.send(JSON.stringify({kierunek: direction}))
-  } else if (direction === "right") {
+  } else if (direction === "P") {
     console.log("P");
     nazwa.send(JSON.stringify({kierunek: direction}))
   }
@@ -129,8 +129,8 @@ function motorSendPreset(){
   	</div>
 	<br>
 	<h2>Kierunek</h2>
-  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('left')">Lewo</button>
-  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('right')">Prawo</button>
+  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('L')">Lewo</button>
+  <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('P')">Prawo</button>
 	<br>
 	<h2>Prędkość</h2>
 	<div class="slidecontainer">
