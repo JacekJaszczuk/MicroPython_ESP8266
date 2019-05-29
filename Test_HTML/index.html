@@ -6,57 +6,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<!-- JQuery Lib -->
-<script src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
-<!-- Styl Materialize -->
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-<!-- Style -->
-<style>
-.slidecontainer {
-  width: 100%; /* Width of the outside container */
-}
-
-/* The slider itself */
-.slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-/* Mouse-over effects */
-.slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-.slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-</style>
-
-<!-- Scripts -->
+<!-- JavaScripts Content -->
 <script>
 function motorPwr(power) {
+  //Funkcja sterująca zasilaniem silnika
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
   var checkBox = document.getElementById("motorPwrCheck"); // Get the checkbox
@@ -70,6 +26,7 @@ function motorPwr(power) {
 }
 
 function motorDir(direction) {
+  //Funckja sterująca kierunkiem obrotów silnika
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
   if (direction === "L"){
@@ -82,6 +39,7 @@ function motorDir(direction) {
 }
 
 function motorVelocity(){
+  //Funkcja sterująca prędkością silnika
   var velocity  = document.getElementById("mySlider").value;
   document.getElementById("valueSlider").innerHTML = "Wartość: " + velocity;
   console.log("Prędkość: " + velocity);
@@ -90,11 +48,30 @@ function motorVelocity(){
   nazwa.send(JSON.stringify({predkosc: velocity}));
 }
 
-function motorSendPreset(){
+function motorSendPresetFile(){
+  //Funkcja przesyłajaca spersonalizowane ustawienia silnika z pliku
   let nazwa = new XMLHttpRequest();
   nazwa.open("POST", "tu_slij", true);
-  
-  var lines = $('textarea').val().split('\n');
+  var input = document.getElementById("openFile");
+  if (input.value != '') {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var text = reader.result;
+      console.log(text);
+      nazwa.send(JSON.stringify({jsonDataFromFile: text}))
+  };
+  reader.readAsText(input.files[0]); 
+  } else {
+    console.log("Input file area is empty")
+  }
+}
+
+function motorSendPreset(){
+  //Funkcja przesyłajaca spersonalizowane ustawienie silnika
+  let nazwa = new XMLHttpRequest();
+  nazwa.open("POST", "tu_slij", true);
+  if (document.getElementById("textarea").value != '') {
+    var lines = $('textarea').val().split('\n');
     for(var i = 0;i < lines.length;i++){
       console.log("Linia numer " + i +": " + lines[i])
       var str = lines[i]
@@ -102,27 +79,15 @@ function motorSendPreset(){
       var step = str.substring(str.lastIndexOf(","), str.indexOf(",")+1);
       var velocity = str.substring(str.lastIndexOf(",")+1, str.lastIndexOf(")"));
       console.log("kierunek: " + direction + ", kroki: " + step + ", predkosc: " + velocity);
+      nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity}))
     }
-  
-  nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity}))
-}
-
-function motorSendPresetFile(){
-  let nazwa = new XMLHttpRequest();
-  nazwa.open("POST", "tu_slij", true);
-
-  var input = document.getElementById("openFile");
-  var reader = new FileReader();
-  reader.onload = function(){
-    var text = reader.result;
-    console.log(text);
-    nazwa.send(JSON.stringify({jsonDataFromFile: text}))
-  };
-  reader.readAsText(input.files[0]); 
+  } else {
+    console.log("Textarea is empty");
+  }
 }
 </script>
 
-<!-- HTML -->
+<!-- HTML CONTENT -->
 <meta charset="utf-8" />
 <title>Panel kontrolny: silnik krokowy</title>
 </head>
@@ -130,26 +95,30 @@ function motorSendPresetFile(){
 <div class="container center-align">
 	<h1>Panel kontrolny</h1>
 	<br>
+  <!-- SEKCJA ZASILANIE -->
 	<h2>Zasilanie</h2>
 	<div class="switch">
-    <label>
-      Wyłącz
-      <input type="checkbox" id="motorPwrCheck" onclick="motorPwr()">
-      <span class="lever"></span>
-      Włącz
-    </label>
-  	</div>
+   <label>
+    Wyłącz
+    <input type="checkbox" id="motorPwrCheck" onclick="motorPwr()">
+    <span class="lever"></span>
+    Włącz
+  </label>
+  </div>
 	<br>
+  <!-- SEKCJA KIERUNEK -->
 	<h2>Kierunek</h2>
   <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('L')">Lewo</button>
   <button class="waves-effect waves-light btn-large" is="przycisk" onclick="motorDir('P')">Prawo</button>
 	<br>
+  <!-- SEKCJA PRĘDKOŚĆ -->
 	<h2>Prędkość</h2>
 	<div class="slidecontainer">
 		<p id="valueSlider">Wartość: 50</p>
-  		<input type="range" min="1" max="100" value="50" class="slider" id="mySlider" onchange="motorVelocity()">
+  		<input style="width: 100%;height: 25px;" type="range" min="1" max="100" value="50" class="slider" id="mySlider" onchange="motorVelocity()">
 	</div>
   <br>
+  <!-- SEKCJA NASTAWY -->
   <h2>Preset</h2>
   <h3 align="left">Wgraj plik:<h3>
     <div class="file-field input-field">
@@ -173,7 +142,7 @@ function motorSendPresetFile(){
 
         </div>
       </form>
-      <button class="btn waves-effect waves-light" type="submit" name="action" onclick="motorSendPreset()">Submit</button>
+      <button class="btn waves-effect waves-light" type="submit" name="action" onclick="motorSendPreset()">Prześlij nastawy</button>
     </div>
 </div>
 </body>
