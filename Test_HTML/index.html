@@ -61,8 +61,9 @@ function motorSendPresetFile(){
     var reader = new FileReader();
     reader.onload = function(){
       var text = reader.result;
+      text = "{\"jsonDataFromFile\":" + text + "}"
       console.log(text);
-      nazwa.send(JSON.stringify({jsonDataFromFile: text}))
+      nazwa.send(text)
   };
   reader.readAsText(input.files[0]); 
   } else {
@@ -73,6 +74,10 @@ function motorSendPresetFile(){
 function motorSendPreset(){
   //Funkcja przesyłajaca spersonalizowane ustawienie silnika
   let nazwa = new XMLHttpRequest();
+  var dict = {}; // Słownik argumentów.
+  dict["kierunek"] = []
+  dict["kroki"] = []
+  dict["predkosc"] = []
   nazwa.open("POST", "tu_slij", true);
   if (document.getElementById("textarea").value != '') {
     var lines = $('textarea').val().split('\n');
@@ -82,9 +87,16 @@ function motorSendPreset(){
       var direction = str.substring(str.lastIndexOf("(") + 1, str.indexOf(","));
       var step = str.substring(str.lastIndexOf(","), str.indexOf(",")+1);
       var velocity = str.substring(str.lastIndexOf(",")+1, str.lastIndexOf(")"));
+      dict.kierunek.push(direction)
+      dict.kroki.push(step)
+      dict.predkosc.push(velocity)
       console.log("kierunek: " + direction + ", kroki: " + step + ", predkosc: " + velocity);
-      nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity}))
+      //nazwa.send(JSON.stringify({kierunek: direction, kroki: step, predkosc: velocity})) // Nie można niestety wysłać drugiej wiadomości.
     }
+    var json_str = JSON.stringify(dict)
+    json_str = "{\"jsonDataFromFile\":" + json_str + "}"
+    console.log(json_str)
+    nazwa.send(json_str)
   } else {
     console.log("Textarea is empty");
   }

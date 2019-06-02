@@ -1,5 +1,5 @@
 {
-"kierunek": ["L", "P", "P"],
-"kroki": [20, 50, 10],
-"predkosc": [20, 40, 70]
+"kierunek": ["L", "P", "P", "L"],
+"kroki": [50, 90, 80, 120],
+"predkosc": [20, 40, 70, 90]
 }

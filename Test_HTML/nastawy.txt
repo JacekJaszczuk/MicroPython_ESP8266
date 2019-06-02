@@ -1,0 +1,4 @@
+silnik(L, 50, 20)
+silnik(P, 90, 40)
+silnik(P, 80, 70)
+silnik(L, 120, 90)
